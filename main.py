@@ -23,3 +23,4 @@ async def welcome() -> dict:
         "api_version": app.version,
         "api_contact": app.contact
     }
+

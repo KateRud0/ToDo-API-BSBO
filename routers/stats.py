@@ -32,3 +32,5 @@ async def get_tasks_stats() -> dict:
         "by_quadrant": by_quadrant,
         "by_status": by_status
     }
+    
+    

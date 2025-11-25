@@ -9,8 +9,6 @@ router = APIRouter(
     tags=["tasks"]
 )
 
-quadrant_types = ["Q1", "Q2", "Q3", "Q4"]
-
 @router.get("/")
 async def get_tasks() -> dict:
     return {
