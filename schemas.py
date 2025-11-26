@@ -17,9 +17,11 @@ class TaskBase(BaseModel):
     is_important: bool = Field(
         ...,
         description="Важность задачи")
-    is_urgent: bool = Field(
-        ...,
-        description="Срочность задачи")
+    
+    deadline_at: Optional[datetime] = Field(
+        None,
+        description="Новый дедлайн"
+    )
     
 
 class TaskCreate(TaskBase):
@@ -51,17 +53,54 @@ class TaskResponse(TaskBase):
     id: int = Field(
         ...,
         description="Уникальный идентификатор задачи",
-        examples=[1])
+        examples=[1]
+        )
     quadrant: str = Field(
         ...,
         description="Квадрант матрицы Эйзенхауэра (Q1, Q2, Q3, Q4)",
-        examples=["Q1"])
+        examples=["Q1"]
+        )
+    is_urgent: bool = Field(
+        ...,
+        description="Срочность задачи (вычисляется автоматически)"
+        )
     completed: bool = Field(
         default=False,
         description="Статус выполнения задачи")
     created_at: datetime = Field(
         ...,
-        description="Дата и время создания задачи")
-
-class Config: 
-    from_attributes = True
+        description="Дата и время создания задачи"
+        )
+    completed_at: Optional[datetime] = Field(
+        None,
+        description="Дата и время заверщения задачи"
+        )
+    days_until_deadline: Optional[int] = Field(
+        None,
+        description="Количество дней до дедлайна (если указан)"
+    )
+    status_message: Optional[str] = Field(
+        None,
+        description="Сообщение о статусе задачи"
+    )
+    class Config: 
+        from_attributes = True
+        
+        
+class TimingStatsResponse(BaseModel):
+    completed_on_time: int = Field(
+        ...,
+        description="Количество задач, завершенных в срок"
+    )
+    completed_late: int = Field(
+        ...,
+        description="Количество задач, завершенных с нарушением сроков"
+    )
+    on_plan_pending: int = Field(
+        ...,
+        description="Количество задач в работе, выполняемых в соответствии с планом"
+    )
+    overtime_pending: int = Field(
+        ...,
+        description="Количество просроченных незавершенных задач"
+    )

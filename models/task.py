@@ -2,8 +2,9 @@ from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text
 from sqlalchemy.sql import func 
 from database import Base 
  
-class Task(Base): 
-    __tablename__ = "tasks" 
+class Task(Base):
+    __tablename__ = "tasks"
+    
     id = Column( 
         Integer, 
         primary_key=True,  
@@ -54,6 +55,11 @@ class Task(Base):
         DateTime(timezone=True), 
         nullable=True  
     ) 
+    #!!!
+    deadline_at = Column(
+        DateTime(timezone=True),
+        nullable=True
+    )
  
  
     def __repr__(self) -> str: 
@@ -70,5 +76,6 @@ class Task(Base):
             "quadrant": self.quadrant, 
             "completed": self.completed, 
             "created_at": self.created_at, 
-            "completed_at": self.completed_at 
+            "completed_at": self.completed_at, 
+            "deadline_at": self.deadline_at
         }
