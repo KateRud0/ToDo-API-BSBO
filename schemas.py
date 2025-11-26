@@ -1,123 +1,67 @@
- 
-from pydantic import BaseModel, Field 
-from typing import Optional 
-from enum import Enum
+
+from pydantic import BaseModel, Field
+from typing import Optional
 from datetime import datetime
 
 
-
-class TaskQuadrant(Enum):
-    Q1 = "q1"
-    Q2 = "q2"
-    Q3 = "q3"
-    Q4 = "q4"
-    
-    
 class TaskBase(BaseModel):
-    id: int = Field(
-        ...,
-        description="Идентификатор")
     title: str = Field(
-        ...,
+        ..., 
         min_length=3,
         max_length=100,
-        description="Название")
-
+        description="Название задачи")
     description: Optional[str] = Field(
-        None,
+        None, 
         max_length=500,
-        description="Описание")
-    
-    is_important: bool = Field( 
-        ..., 
-        description="Важность задачи") 
-    
-    is_urgent: bool = Field( 
-        ..., 
-        description="Срочность задачи") 
-    
-    quadrant: TaskQuadrant = Field(
+        description="Описание задачи")
+    is_important: bool = Field(
         ...,
-        description="Квадрант")
-    
-    is_completed: bool = Field( 
-        ..., 
-        description="Сстатус задачи")
-    
-    created_at: datetime = Field(
+        description="Важность задачи")
+    is_urgent: bool = Field(
         ...,
-        description="Дата создания")
+        description="Срочность задачи")
     
+
+class TaskCreate(TaskBase):
+    pass
+
+
 class TaskUpdate(BaseModel):
-    id: int = Field(
-        ...,
-        description="Идентификатор")
     title: Optional[str] = Field(
         None,
         min_length=3,
         max_length=100,
-        description="Название")
-
+        description="Новое название задачи")
     description: Optional[str] = Field(
         None,
         max_length=500,
-        description="Описание")
-    
-    is_important: Optional[bool] = Field( 
-        None, 
-        description="Важность задачи") 
-    
-    is_urgent: Optional[bool] = Field( 
-        None, 
-        description="Срочность задачи") 
-    
-    
-    is_completed: Optional[bool] = Field( 
-        None, 
-        description="Статус задачи")
-    
-    
-class TaskCreate(BaseModel):
-    
-    title: str = Field(
-        ...,
-        min_length=3,
-        max_length=100,
-        description="Название")
-
-    description: Optional[str] = Field(
+        description="Новое описание")
+    is_important: Optional[bool] = Field(
         None,
-        max_length=500,
-        description="Описание")
+        description="Новая важность")
+    is_urgent: Optional[bool] = Field(
+        None,
+        description="Новая срочность")
+    completed: Optional[bool] = Field(
+        None,
+        description="Статус выполнения")
     
-    is_important: bool = Field( 
-        ..., 
-        description="Важность задачи") 
-    
-    is_urgent: bool = Field( 
-        ..., 
-        description="Срочность задачи") 
-    
-    is_completed: bool = Field( 
-        ..., 
-        description="Статус задачи")
-    
-class TaskResponse(BaseModel):
-    
+
+class TaskResponse(TaskBase):
     id: int = Field(
         ...,
-        description="Идентификатор")
-    
-    title: str = Field(
+        description="Уникальный идентификатор задачи",
+        examples=[1])
+    quadrant: str = Field(
         ...,
-        min_length=3,
-        max_length=100,
-        description="Название")
-          
-    quadrant: TaskQuadrant = Field(
+        description="Квадрант матрицы Эйзенхауэра (Q1, Q2, Q3, Q4)",
+        examples=["Q1"])
+    completed: bool = Field(
+        default=False,
+        description="Статус выполнения задачи")
+    created_at: datetime = Field(
         ...,
-        description="Квадрант")
-    
-    is_completed: bool = Field( 
-        ..., 
-        description="Статус задачи")
+        description="Дата и время создания задачи")
+
+class Config: 
+    from_attributes = True
